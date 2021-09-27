@@ -1,107 +1,264 @@
-using Magic[MSSV].Equipment.Armors.Heavy;
-using Magic[MSSV].Equipment.Armors.Leather;
-using Magic[MSSV].Equipment.Armors.Light;
-using Magic[MSSV].Equipment.Weapons.Blunt;
-using Magic[MSSV].Equipment.Weapons.Sharp;
+using MagicDestroyers.Enums;
 using System;
 
-namespace Ex2[MSSV]
+namespace Baitap3
 {
     class Program
     {
         static void Main(string[] args)
         {
-            
-            Magic[MSSV].Characters.Melee.Knight knight = new Magic[MSSV].Characters.Melee.Knight();
-            try
-            {
-                knight.AbilityPoints = 10; 
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            try
-            {
-                knight.Faction = "Melee";
-            }
-            catch (ArgumentException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            try
-            {
-                knight.Name = "Knight";
-            }
-            catch (ArgumentException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            try
-            {
-                knight.Level = 10;
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            try
-            {
-                knight.HealthPoints = 50;
-            }
-            catch (ArgumentOutOfRangeException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            Chainlink knightChainlink = new Chainlink();
-            try { 
-                knightChainlink.ArmorPoints = 10;
-            }
-            catch(ArgumentOutOfRangeException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            knight.BodyArmor = knightChainlink;
-            Hammer knightHammer = new Hammer();
-            try
-            {
-                knightHammer.Damage = 1;
-            }
-            catch(ArgumentOutOfRangeException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            knight.Weapon = knightHammer;
+            MagicDestroyers.PlayersInfo.PrintFullInfo();
+        }
+    }
+}
+namespace MagicDestroyers.Enums 
+{
+//////////your code here ////////
 
-            try
+//////////end your code/////////
+}
+namespace MagicDestroyers.Equipment.Armors.Leather
+{
+    public class LightLeatherVest
+    {
+        private const int DEFAULT_ARMOR_POINTS = 10;
+
+        
+
+        public int ArmorPoints
+        {
+            get
             {
-                knight.HolyBlow();
+                return armorPoints;
             }
-            catch(NotImplementedException ex)
+            set
             {
-                Console.WriteLine("Not Implement");
+                if (value >= 0)
+                {
+                    this.armorPoints = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException(string.Empty, "Armor Points value should be a positive number");
+                }
             }
-            try
+        }
+
+        public LightLeatherVest()
+            : this(DEFAULT_ARMOR_POINTS)
+        {
+        }
+        //////////your code here ////////
+
+        //////////end your code/////////
+        
+    }
+}
+
+namespace MagicDestroyers.Equipment.Weapons.Sharp
+{
+    public class Sword
+    {
+        private const int DEFAULT_DAMAGE_POINTS = 10;
+
+        public int DamagePoints
+        {
+            get
             {
-                knight.PurifySoul();
+                return damagePoints;
             }
-            catch (NotImplementedException ex)
+            set
             {
-                Console.WriteLine("Not Implement");
+                if (value >= 0)
+                {
+                    this.damagePoints = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException(string.Empty, "Damage Points value should be a positive number");
+                }
             }
-            try
+        }
+
+        public Sword()
+            : this(DEFAULT_DAMAGE_POINTS)
+        {
+        }
+
+        //////////your code here ////////
+
+        //////////end your code/////////
+    }
+}
+
+namespace MagicDestroyers.Characters.Spellcasters
+{
+    public class Necromancer
+    {
+        private const Faction DEFAULT_FACTION = Faction.Spellcaster;
+        private const int DEFAULT_LEVEL = 1;
+        private const int DEFAULT_HEALTH_POINTS = 120;
+        private const int DEFAULT_ABILITY_POINTS = 100;
+        private const string DEFAULT_NAME = "Necromus";
+
+        private readonly Equipment.Armors.Leather.LightLeatherVest DEFAULT_BODY_ARMOR = new Equipment.Armors.Leather.LightLeatherVest();
+        private readonly Equipment.Weapons.Sharp.Sword DEFAULT_WEAPON = new Equipment.Weapons.Sharp.Sword();
+
+        
+
+        public Faction Faction
+        {
+            get
             {
-                knight.RighteousWings();
+                return faction;
             }
-            catch (NotImplementedException ex)
+            set
             {
-                Console.WriteLine("Not Implement");
+                this.faction = value;
             }
-            
+        }
+
+        public int AbilityPoints
+        {
+            get
+            {
+                return abilityPoints;
+            }
+            set
+            {
+                if (value >= 0 && value <= 100)
+                {
+                    abilityPoints = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException(string.Empty, "Inappropriate value, the value should be >= 0 and <= 10.");
+                }
+            }
+        }
+        public int HealthPoints
+        {
+            get
+            {
+                return healthPoints;
+            }
+            set
+            {
+                if (value >= 0 && value <= 100)
+                {
+                    healthPoints = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException(string.Empty, "Inappropriate value, the value should be >= 0 and <= 100.");
+                }
+            }
+        }
+        public int Level
+        {
+            get
+            {
+                return level;
+            }
+            set
+            {
+                if (value >= 0)
+                {
+                    healthPoints = value;
+                }
+                else
+                {
+                    throw new ArgumentOutOfRangeException(string.Empty, "Inappropriate value, level should always be positive.");
+                }
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                if (value.Length >= 3 && value.Length <= 12)
+                {
+                    name = value;
+                }
+                else
+                {
+                    throw new ArgumentException(string.Empty, "Inappropriate length of name, name should be between 3 and 12 characters.");
+                }
+            }
+        }
+
+        public Equipment.Armors.Leather.LightLeatherVest BodyArmor
+        {
+            get
+            {
+                return bodyArmor;
+            }
+            set
+            {
+                bodyArmor = value;
+            }
+        }
+        public Equipment.Weapons.Sharp.Sword Weapon
+        {
+            get
+            {
+                return weapon;
+            }
+            set
+            {
+                weapon = value;
+            }
+        }
+
+        public Necromancer()
+            : this(DEFAULT_NAME, DEFAULT_LEVEL)
+        {
+        }
+
+        public Necromancer(string name, int level)
+            : this(name, level, DEFAULT_HEALTH_POINTS)
+        {
+        }
+
+        //////////your code here ////////
+
+        //////////end your code/////////
+
+        public void ShadowRage()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void VampireTouch()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void BoneShield()
+        {
+            throw new NotImplementedException();
         }
     }
 }
 
-//////////your code here ////////
+namespace MagicDestroyers
+{
+    public static class PlayersInfo
+    {
+        private static string playersInfoDirectory = "";
+        
+        
+        //////////your code here ////////
 
-//////////end your code/////////
+        //////////end your code/////////
+
+        
+    }
+}
+
+
