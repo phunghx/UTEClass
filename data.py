@@ -247,7 +247,7 @@ int main()
     quickSortGeneral(Iarr, 0, 2, false);
     
     //external sort
-    sortingFile('./data.txt','./dictionary.txt');
+    sortingFile("./data.txt","./dictionary.txt");
     
 }
 
