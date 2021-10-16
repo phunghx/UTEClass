@@ -7,7 +7,7 @@ namespace Baitap3
     {
         static void Main(string[] args)
         {
-            MagicDestroyers.PlayersInfo.PrintFullInfo();
+            Console.WriteLine(MagicDestroyers.PlayersInfo.playersInfoDirectory);
         }
     }
 }
@@ -49,7 +49,7 @@ namespace MagicDestroyers.Equipment.Armors.Leather
         {
         }
         //////////your code here ////////
-
+        private int armorPoints;
         //////////end your code/////////
         
     }
@@ -254,6 +254,10 @@ namespace MagicDestroyers
         
         
         //////////your code here ////////
+        public static void PrintFullInfo()  
+        {
+              System.Console.WriteLine("C:\home")
+        }
 
         //////////end your code/////////
 

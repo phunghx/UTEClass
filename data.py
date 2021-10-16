@@ -1,256 +1,193 @@
 #include <iostream>
-#include <time.h>
+#include <stdio.h>
 #include <stdlib.h>
-//////your code here/////
 
-////// end your code /////
-
-//// [MSSV]
-
-void swap(int* xp, int* yp)
-{
-    int temp = *xp;
-    *xp = *yp;
-    *yp = temp;
-}
-
-template<typename T> 
-void printArray(T arr[], int size)
-{
-    int i;
-    for (i = 0; i < size; i++)
-        std::cout << arr[i] << " ";
-    std::cout << std::endl;
-}
-void insertionSort(int arr[], int n)
-{
-    int i, key, j;
-    for (i = 1; i < n; i++)
-    {
-        key = arr[i];
-        j = i - 1;
-        while (j >= 0 && arr[j] > key)
-        {
-            arr[j + 1] = arr[j];
-            j = j - 1;
-        }
-        arr[j + 1] = key;
-    }
-}
-void bubbleSort(int arr[], int n)
-{
+struct Element {
     int i, j;
-    for (i = 0; i < n - 1; i++)
-        for (j = 0; j < n - i - 1; j++)
-            if (arr[j] > arr[j + 1])
-                swap(&arr[j], &arr[j + 1]);
-}
-void merge(int array[], int const left, int const mid, int const right)
-{
-    auto const subArrayOne = mid - left + 1;
-    auto const subArrayTwo = right - mid;
-    auto* leftArray = new int[subArrayOne],
-        * rightArray = new int[subArrayTwo];
-    for (auto i = 0; i < subArrayOne; i++)
-        leftArray[i] = array[left + i];
-    for (auto j = 0; j < subArrayTwo; j++)
-        rightArray[j] = array[mid + 1 + j];
+    int value;
+};
 
-    auto indexOfSubArrayOne = 0,
-        indexOfSubArrayTwo = 0;
-    int indexOfMergedArray = left;
-    while (indexOfSubArrayOne < subArrayOne && indexOfSubArrayTwo < subArrayTwo) {
-        if (leftArray[indexOfSubArrayOne] <= rightArray[indexOfSubArrayTwo]) {
-            array[indexOfMergedArray] = leftArray[indexOfSubArrayOne];
-            indexOfSubArrayOne++;
+struct  SparseMatrix 
+{
+    int M, N, num;  // num so phan tu khac 0
+    struct Element* element;
+};
+
+
+SparseMatrix convertArr2Sparse(int** arr, int M, int N) {
+    int num = 0;
+    //dem so luong phan tu khac 0
+    int i, j;
+    for (i = 0; i < M; i++) {
+        for (j = 0; j < N; j++) {
+            if (arr[i][j] != 0)
+                num += 1;
         }
+    }
+    SparseMatrix result;
+    result.M = M;
+    result.N = N;
+    result.num = num;
+    result.element = new Element[num];
+    int k = 0;
+    for (i = 0; i < M; i++) {
+        for (j = 0; j < N; j++) {
+            if (arr[i][j] != 0) {
+                result.element[k].i = i;
+                result.element[k].j = j;
+                result.element[k].value = arr[i][j];
+                k += 1;
+            }
+        }
+    }
+    return result;
+
+}
+void printSparse(const SparseMatrix & S) {
+    int k;
+    printf("[%d]x[%d]: [%d]\n", S.M, S.N, S.num);
+    for (k = 0; k < S.num; k++) {
+        printf("[row %d, col %d]: %d\n", S.element[k].i, 
+            S.element[k].j, S.element[k].value);
+    }
+}
+
+SparseMatrix * add(SparseMatrix s1, SparseMatrix s2) 
+{
+    SparseMatrix *result;
+    if (s1.M != s2.M || s1.N != s2.N) {
+        return nullptr;
+    }
+    result = new SparseMatrix;
+    int i, j, k;
+    i = j = k = 0;
+
+    result->M = s1.M;
+    result->N = s2.N;
+    
+    result->num = s1.num + s2.num;
+    result->element = new Element[result->num];
+    
+    while (i < s1.num && j < s2.num) {
+        if (s1.element[i].i < s2.element[j].i)
+            result->element[k++] = s1.element[i++];
+        else if (s1.element[i].i > s2.element[j].i) 
+            result->element[k++] = s2.element[j++];
         else {
-            array[indexOfMergedArray] = rightArray[indexOfSubArrayTwo];
-            indexOfSubArrayTwo++;
-        }
-        indexOfMergedArray++;
-    }
-    while (indexOfSubArrayOne < subArrayOne) {
-        array[indexOfMergedArray] = leftArray[indexOfSubArrayOne];
-        indexOfSubArrayOne++;
-        indexOfMergedArray++;
-    }
-    while (indexOfSubArrayTwo < subArrayTwo) {
-        array[indexOfMergedArray] = rightArray[indexOfSubArrayTwo];
-        indexOfSubArrayTwo++;
-        indexOfMergedArray++;
-    }
-}
-void mergeSort(int array[], int const begin, int const end)
-{
-    if (begin >= end)
-        return;
-
-    auto mid = begin + (end - begin) / 2;
-    mergeSort(array, begin, mid);
-    mergeSort(array, mid + 1, end);
-    merge(array, begin, mid, end);
-}
-
-int partition(int arr[], int low, int high)
-{
-    int pivot = arr[high];
-    int i = (low - 1);
-    for (int j = low; j <= high - 1; j++)
-    {
-        if (arr[j] < pivot)
-        {
-            i++;
-            swap(&arr[i], &arr[j]);
+            if (s1.element[i].j < s2.element[j].j)
+                result->element[k++] = s1.element[i++];
+            else if (s1.element[i].j > s2.element[j].j)
+                result->element[k++] = s2.element[j++];
+            else {
+                result->element[k] = s1.element[i];
+                result->element[k++].value = s1.element[i++].value + s2.element[j++].value;
+            }
         }
     }
-    swap(&arr[i + 1], &arr[high]);
-    return (i + 1);
-}
-void quickSort(int arr[], int low, int high)
-{
-    if (low < high)
-    {
-        int pi = partition(arr, low, high);
-        quickSort(arr, low, pi - 1);
-        quickSort(arr, pi + 1, high);
+    SparseMatrix* finalresult;
+    finalresult = new SparseMatrix;
+    finalresult->M = s1.M;
+    finalresult->N = s2.N;
+
+    finalresult->num = k;
+    finalresult->element = new Element[finalresult->num];
+    for (i = 0; i < k; i++) {
+        finalresult->element[i] = result->element[i];
     }
+    delete result;
+    return finalresult;
+
 }
 
-//////your code here/////
-
-////// end your code /////
-
-
-void printStatic(unsigned int arr[], int N)
+SparseMatrix* mul(SparseMatrix s1, SparseMatrix s2)
 {
-    unsigned int min, max;
-    unsigned int sum = 0;
-    float mean;
     //////your code here/////
 
     ////// end your code /////
-    std::cout << "min:" << min << "\nmax:" << max << "\nmean:" << mean << std::endl;
 }
 
-void insertionSortComplexity(int num_simulation)
-{
-    unsigned int* STEP;
-    STEP = new unsigned int[num_simulation];
-    int N;
-    int* arr;
-    srand(time(NULL));
-    for (int i = 0; i < num_simulation; i++) {
-        N = rand() % 1000 + 50;
-        arr = new int[N];
-        for (int j = 0; j < N; j++) {
-            arr[j] = rand();
-        }
-        unsigned int step = 0;
-        //////your code here/////
 
-        ////// end your code /////
-        
-        STEP[i] = step;
-        delete[] arr;
-    }
-    printStatic(STEP, num_simulation);
-}
 
-void bubbleSortComplexity(int num_simulation)
-{
-    unsigned int* STEP;
-    STEP = new unsigned int[num_simulation];
-    int N;
-    int* arr;
-    srand(time(NULL));
-    for (int i = 0; i < num_simulation; i++) {
-        N = rand() % 1000 + 50;
-        arr = new int[N];
-        for (int j = 0; j < N; j++) {
-            arr[j] = rand();
-        }
-        unsigned int step = 0;
-        //////your code here/////
 
-        ////// end your code /////
-        
-        STEP[i] = step;
-        delete[] arr;
-    }
-    printStatic(STEP, num_simulation);
-}
-
-void mergeSortComplexity(int num_simulation)
-{
-    unsigned int* STEP;
-    STEP = new unsigned int[num_simulation];
-    int N;
-    int* arr;
-    srand(time(NULL));
-    for (int i = 0; i < num_simulation; i++) {
-        N = rand() % 1000 + 50;
-        arr = new int[N];
-        for (int j = 0; j < N; j++) {
-            arr[j] = rand();
-        }
-        unsigned int step = 0;
-        //////your code here/////
-
-        ////// end your code /////
-        
-        STEP[i] = step;
-        delete[] arr;
-    }
-    printStatic(STEP, num_simulation);
-}
-
-void quickSortComplexity(int num_simulation)
-{
-    unsigned int* STEP;
-    STEP = new unsigned int[num_simulation];
-    int N;
-    int* arr;
-    srand(time(NULL));
-    for (int i = 0; i < num_simulation; i++) {
-        N = rand() % 1000 + 50;
-        arr = new int[N];
-        for (int j = 0; j < N; j++) {
-            arr[j] = rand();
-        }
-        unsigned int step = 0;
-        //////your code here/////
-
-        ////// end your code /////
-        
-        STEP[i] = step;
-        delete[] arr;
-    }
-    printStatic(STEP, num_simulation);
-}
 
 int main()
 {
-    insertionSortComplexity(10);
-    bubbleSortComplexity(10);
-    mergeSortComplexity(10);
-    quickSortComplexity(10);
+
+    int ** Array;
+    int N = 1000;
+    int M = 2000;
+    int num = 100;
+    int k,i,j;
+    Array = new int* [M];
+    for ( i = 0; i < M; i++) {
+        Array[i] = new int[N];
+    }
+    for (i = 0; i < M; i++) {
+        for (j = 0; j < N; j++) {
+            Array[i][j] = 0;
+        }
+    }
+    for (k = 0; k < num; k++) {
+        i = rand() % M;
+        j = rand() % N;
+        Array[i][j] = rand(); // khác 0
+    }
+
+    struct SparseMatrix A, B,C;
     
-    float Farr[] = { 1.0,10,2 };
-    int Iarr[] = { 1,10,2 };
-    bool descending = true;
+    A = convertArr2Sparse(Array, M, N);
+    num = 200;
+    M = 2000;
+    N = 3000;
+    for (k = 0; k < num; k++) {
+        i = rand() % M;
+        j = rand() % N;
+        Array[i][j] = rand(); // khác 0
+    }
+    B = convertArr2Sparse(Array, M, N);
+
+    C = *(mul(A, B));
+
+    // chỉ có 100 phần tử khác 0
     
-    insertionSortGeneral(Farr, 3, descending);
-    insertionSortGeneral(Iarr, 3, false);
-    bubbleSortGeneral(Farr, 3, descending);
-    bubbleSortGeneral(Iarr, 3, false);
-    mergeSortGeneral(Farr,0, 2, descending);
-    mergeSortGeneral(Iarr, 0, 2, false);
-    quickSortGeneral(Farr,0, 2, descending);
-    quickSortGeneral(Iarr, 0, 2, false);
+    //Xuat thông tin
+    printSparse(C);
     
-    //external sort
-    sortingFile("./data.txt","./dictionary.txt");
+    
+
+
+    /*
+    //danh sách liên kết đơn
+    //chuyển từ array sang link list
+    int A[3] = {1,2,3};
+
+    Node* head = new Node;
+    Node* end = new Node;
+
+    Node* node;   // tham chiếu tất cả các nodes ở giữa
+
+    node = new Node;
+
+    head->data = A[0];
+    node->data = A[1];
+    end->data = A[2];
+
+    head->next = node;
+    node->next = end;
+    end->next = nullptr;
+    end->prev = node;
+    node->prev = head;
+    head->prev = nullptr;
+
+
+    // xuất danh sách
+    Node* temp = head;
+    while(temp->next != nullptr) {
+        printf("%d, ", temp->data);
+        temp = temp->next;
+    }
+    printf("%d, ", temp->data);
+    */
     
 }
 
