@@ -9,7 +9,9 @@ struct Element {
 
 struct  SparseMatrix 
 {
-    int M, N, num;  // num so phan tu khac 0
+    int M;  // row
+    int N;  // column
+    int num;  // num so phan tu khac 0
     struct Element* element;
 };
 
@@ -114,8 +116,8 @@ int main()
 {
 
     int ** Array, **Array2;
-    int N = 1000;
-    int M = 2000;
+    int M = 1000;
+    int N = 2000;
     int num = 100;
     int k,i,j;
     Array = new int* [M];
