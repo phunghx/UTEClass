@@ -113,7 +113,7 @@ SparseMatrix* mul(SparseMatrix s1, SparseMatrix s2)
 int main()
 {
 
-    int ** Array, Array2;
+    int ** Array, **Array2;
     int N = 1000;
     int M = 2000;
     int num = 100;
