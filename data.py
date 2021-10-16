@@ -113,7 +113,7 @@ SparseMatrix* mul(SparseMatrix s1, SparseMatrix s2)
 int main()
 {
 
-    int ** Array;
+    int ** Array, Array2;
     int N = 1000;
     int M = 2000;
     int num = 100;
@@ -139,12 +139,21 @@ int main()
     num = 200;
     M = 2000;
     N = 3000;
+    Array2 = new int* [M];
+    for ( i = 0; i < M; i++) {
+        Array2[i] = new int[N];
+    }
+    for (i = 0; i < M; i++) {
+        for (j = 0; j < N; j++) {
+            Array2[i][j] = 0;
+        }
+    }
     for (k = 0; k < num; k++) {
         i = rand() % M;
         j = rand() % N;
-        Array[i][j] = rand(); // khác 0
+        Array2[i][j] = rand(); // khác 0
     }
-    B = convertArr2Sparse(Array, M, N);
+    B = convertArr2Sparse(Array2, M, N);
 
     C = *(mul(A, B));
 
