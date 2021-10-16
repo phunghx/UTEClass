@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-
+///[MSSV]
 struct Element {
     int i, j;
     int value;
@@ -156,38 +156,7 @@ int main()
     
 
 
-    /*
-    //danh sách liên kết đơn
-    //chuyển từ array sang link list
-    int A[3] = {1,2,3};
-
-    Node* head = new Node;
-    Node* end = new Node;
-
-    Node* node;   // tham chiếu tất cả các nodes ở giữa
-
-    node = new Node;
-
-    head->data = A[0];
-    node->data = A[1];
-    end->data = A[2];
-
-    head->next = node;
-    node->next = end;
-    end->next = nullptr;
-    end->prev = node;
-    node->prev = head;
-    head->prev = nullptr;
-
-
-    // xuất danh sách
-    Node* temp = head;
-    while(temp->next != nullptr) {
-        printf("%d, ", temp->data);
-        temp = temp->next;
-    }
-    printf("%d, ", temp->data);
-    */
+    
     
 }
 
